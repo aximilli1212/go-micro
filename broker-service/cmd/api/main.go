@@ -14,11 +14,12 @@ func main() {
 
 	app := Config{}
 
-	log.Println("Starting broker service on Port: %s", webPort)
+	log.Printf("Starting broker service on Port: %s \n ", webPort)
 
 	//define Http server
 	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", webPort),
+		Addr:    fmt.Sprintf(":%s", webPort),
+		Handler: app.routes(),
 	}
 
 	//Start Server
