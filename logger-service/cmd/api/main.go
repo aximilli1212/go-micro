@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"time"
 )
 
 const (
@@ -14,6 +15,11 @@ const (
 	gRpcPort = "50001"
 	mongoURL = "mongodb://mongo:27017"
 )
+
+var client *mongo.Client
+
+type Config struct {
+}
 
 func connectToMongo() (*mongo.Client, error) {
 	//connect to the database
@@ -39,7 +45,16 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	client := mongoClient
+	client = mongoClient
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
 
 	fmt.Printf("Connected to mongo: %v\n", client)
 
