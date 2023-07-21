@@ -1,6 +1,7 @@
 package main
 
 import (
+	"authentication/data"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,6 +20,7 @@ const (
 var client *mongo.Client
 
 type Config struct {
+	Models data.Models
 }
 
 func connectToMongo() (*mongo.Client, error) {
@@ -39,6 +41,10 @@ func connectToMongo() (*mongo.Client, error) {
 	return c, nil
 }
 
+func (app *Config) serve() {
+	
+}
+
 func main() {
 	//connect to the database
 	mongoClient, err := connectToMongo()
@@ -55,6 +61,10 @@ func main() {
 			panic(err)
 		}
 	}()
+
+	app := Config{
+		Models: data.New(client),
+	}
 
 	fmt.Printf("Connected to mongo: %v\n", client)
 
