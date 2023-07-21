@@ -1,12 +1,13 @@
 package main
 
 import (
-	"authentication/data"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"log-service/data"
+	"net/http"
 	"time"
 )
 
@@ -42,7 +43,17 @@ func connectToMongo() (*mongo.Client, error) {
 }
 
 func (app *Config) serve() {
-	
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", webPort),
+		Handler: app.routes(),
+	}
+
+	err := srv.ListenAndServe()
+
+	if err != nil {
+		log.Println("Error starting server: ", err)
+		return
+	}
 }
 
 func main() {
@@ -65,6 +76,9 @@ func main() {
 	app := Config{
 		Models: data.New(client),
 	}
+
+	//start web server
+	go app.serve()
 
 	fmt.Printf("Connected to mongo: %v\n", client)
 
