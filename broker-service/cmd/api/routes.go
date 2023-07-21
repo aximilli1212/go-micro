@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func routes() http.Handler {
+func (app *Config) routes() http.Handler {
 	mux := chi.NewRouter()
 
 	//Specify who is allowed to connect
