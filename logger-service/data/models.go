@@ -72,7 +72,7 @@ func (l *LogEntry) All() ([]*LogEntry, error) {
 
 		err := cursor.Decode(&item)
 		if err != nil {
-			log.Print("Error decoding log into slice:", err)
+			log.Println("Error decoding log into slice:", err)
 			return nil, err
 		} else {
 			logs = append(logs, &item)
