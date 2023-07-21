@@ -8,6 +8,10 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/jackc/pgconn"
+	_ "github.com/jackc/pgx/v4"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 const webPort = "80"
@@ -22,11 +26,18 @@ type Config struct {
 func main() {
 	log.Printf("Starting authentication service::")
 
-	//TODO:: Connect to DB
+	// Connect to DB
+	conn := connectToDB()
+	if conn == nil {
+		log.Panic("Unable to connect to DB")
+	}
 
 	//setup config
 
-	app := Config{}
+	app := Config{
+		DB:     conn,
+		Models: data.New(conn),
+	}
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
