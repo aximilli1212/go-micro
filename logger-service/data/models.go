@@ -139,7 +139,7 @@ func (l *LogEntry) Update() (*mongo.UpdateResult, error) {
 			{"$set", bson.D{
 				{"name", l.Name},
 				{"data", l.Data},
-				{"updated_at", time.Now()}}},
+				{"updated_at::Time", time.Now()}}},
 		},
 	)
 
