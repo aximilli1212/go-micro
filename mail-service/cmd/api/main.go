@@ -15,7 +15,9 @@ type Config struct {
 const webPort = "80"
 
 func main() {
-	app := Config{}
+	app := Config{
+		Mailer: createMail(),
+	}
 	log.Println("Starting mail service on port:", webPort)
 
 	srv := &http.Server{
